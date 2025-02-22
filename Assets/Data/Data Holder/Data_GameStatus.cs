@@ -14,5 +14,6 @@ public enum GameStatus
         PlayerUpdated,
         RaiseHand,
         RaiseBotHand,
-        RoundStarted
+        RoundStarted,
+        RoundFinished
     }

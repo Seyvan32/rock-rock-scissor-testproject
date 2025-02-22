@@ -43,6 +43,7 @@ public class GameData
 {
     public PlayerData[] players;
     public int turn = 0;
+    public int winnerId = 0;
 }
 
 public class PlayerData

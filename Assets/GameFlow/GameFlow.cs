@@ -10,14 +10,6 @@ public class GameFlow : MonoBehaviour
     private int oponentId = 2;
 
     /// <summary>
-    /// Awake is called when the script instance is being loaded.
-    /// </summary>
-    private void Awake()
-    {
-        
-    }
-
-    /// <summary>
     /// Start is called on the frame when a script is enabled just before
     /// any of the Update methods is called the first time.
     /// </summary>
@@ -37,10 +29,11 @@ public class GameFlow : MonoBehaviour
             gameStatus != GameStatus.RoundStarted) return;
 
         // if game status is GameBoard, start round
-        if (gameStatus == GameStatus.GameBoard) {
+        if (gameStatus == GameStatus.GameBoard)
+        {
             // Init players data for the first time
             InitPlayers();
-            
+
             StartRound();
         }
 
@@ -49,13 +42,16 @@ public class GameFlow : MonoBehaviour
 
     }
 
-    private void InitPlayers(){
+    private void InitPlayers()
+    {
         // Create two players
-        PlayerData selfPlayer = new PlayerData {
+        PlayerData selfPlayer = new PlayerData
+        {
             id = selfId,
             score = 0
         };
-        PlayerData oponentPlayer = new PlayerData {
+        PlayerData oponentPlayer = new PlayerData
+        {
             id = oponentId,
             score = 0
         };
@@ -94,15 +90,26 @@ public class GameFlow : MonoBehaviour
 
         // compare player hands and add score based on winner
         PlayerData winner = CompareHands();
-        if (winner != null) winner.score++;
+        if (winner != null)
+        {
+            // add score to winner player
+            winner.score++;
 
+            // Set winner to gameData
+            Data_Holder.Instance.gameData.GetData().winnerId = winner.id;
+
+            // emit round finished event
+            Data_Holder.Instance.OnGameStatus.Invoke(GameStatus.RoundFinished);
+        }
+        
         // wait for 0.5 seconds
         yield return new WaitForSeconds(0.5f);
-        
+
         StartRound();
     }
 
-    private PlayerData CompareHands(){
+    private PlayerData CompareHands()
+    {
         // get self and oponent player
         PlayerData selfPlayer = Data_Holder.Instance.GetSelfPlayer();
         PlayerData oponentPlayer = Data_Holder.Instance.GetOponentPlayer();
@@ -114,8 +121,8 @@ public class GameFlow : MonoBehaviour
         }
 
         if ((selfPlayer.hand == HandType.Rock && oponentPlayer.hand == HandType.Scissors) ||
-            (selfPlayer.hand  == HandType.Paper && oponentPlayer.hand == HandType.Rock) ||
-            (selfPlayer.hand  == HandType.Scissors && oponentPlayer.hand == HandType.Paper))
+            (selfPlayer.hand == HandType.Paper && oponentPlayer.hand == HandType.Rock) ||
+            (selfPlayer.hand == HandType.Scissors && oponentPlayer.hand == HandType.Paper))
         {
             return selfPlayer; // Player 1 wins
         }
